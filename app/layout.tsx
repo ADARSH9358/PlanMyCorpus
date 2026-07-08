@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     "emi calculator",
     "financial planning",
   ],
+  verification: {
+    other: {
+      'google-adsense-account': ['ca-pub-3353800304822117'],
+    },
+  },
 };
 
 const navLinks = [
@@ -54,12 +59,12 @@ export default function RootLayout({
              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
            />
            {/* ── Google AdSense ── */}
-        <Script
+        {/* <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3353800304822117"
           crossOrigin="anonymous"
           strategy="beforeInteractive"
-        />
+        /> */}
         </head>
       <body className="min-h-full flex flex-col">
 
