@@ -53,15 +53,17 @@ export default function RootLayout({
              rel="stylesheet"
              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
            />
-        </head>
-      <body className="min-h-full flex flex-col">
-
-        {/* ── Google AdSense ── */}
+           {/* ── Google AdSense ── */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3353800304822117"
           crossOrigin="anonymous"
+          strategy="beforeInteractive"
         />
+        </head>
+      <body className="min-h-full flex flex-col">
+
+        
 
         {/* ── Header ── */}
         <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
