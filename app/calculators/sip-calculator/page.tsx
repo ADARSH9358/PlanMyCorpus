@@ -4,18 +4,31 @@ import PopularCalculatorsLinks from "@/components/popular-calculators-links";
 import SipCalculator from "@/components/sip-calculator";
 
 export const metadata: Metadata = {
-  title: "SIP Calculator",
+  title: "Free SIP Calculator | SIP Returns Calculator | PlanMyCorpus",
   description:
-    "Use PlanMyCorpus SIP Calculator to project weekly, monthly, or yearly SIP with optional lump sum, up to 50% return and 70 years, with instant visual charts.",
+    "Calculate SIP returns with weekly, monthly, or yearly investments. Get accurate projections with optional lump sum, up to 50% return rate, and investment periods up to 70 years. Real formula-based calculations.",
   keywords: [
     "sip calculator",
     "mutual fund sip calculator",
-    "investment growth calculator",
     "sip return calculator",
-    "lumpsum sip calculator",
-    "weekly sip calculator",
-    "yearly sip calculator",
+    "sip calculator with lump sum",
+    "free sip calculator",
+    "best sip calculator",
+    "investment sip calculator",
+    "sip calculator monthly",
   ],
+  openGraph: {
+    title: "SIP Calculator - Calculate Your Investment Returns | PlanMyCorpus",
+    description:
+      "Free SIP calculator to project your mutual fund investments. Support for weekly, monthly, yearly frequencies, lump sum, and up to 70-year durations. Get instant results with visual charts.",
+    type: "website",
+    url: "https://yourdomain.com/calculators/sip-calculator",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free SIP Calculator | Calculate SIP Returns",
+    description: "Calculate your SIP returns with optional lump sum. Weekly, monthly, or yearly frequencies. Up to 50% return rate and 70-year duration.",
+  },
 };
 
 const faqSchema = {
@@ -81,12 +94,36 @@ const faqSchema = {
   ],
 };
 
+const calculatorSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "SIP Calculator",
+  description:
+    "Calculate SIP (Systematic Investment Plan) returns with weekly, monthly, or yearly investment frequency, optional lump sum, and flexible return rates.",
+  url: "https://plan-my-corpus.vercel.app/calculators/sip-calculator",
+  applicationCategory: "FinanceApplication",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    "priceCurrency": "USD",
+  },
+  creator: {
+    "@type": "Organization",
+    name: "PlanMyCorpus",
+    url: "https://plan-my-corpus.vercel.app",
+  },
+};
+
 export default function SipCalculatorPage() {
   return (
     <main className="mx-auto flex w-full max-w-[1500px] flex-1 flex-col gap-8 px-3 py-10 sm:px-4 md:px-6 lg:px-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }}
       />
 
       <nav aria-label="Breadcrumb" className="text-sm text-slate-600">

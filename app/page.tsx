@@ -1,4 +1,35 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "PlanMyCorpus | Free Financial Calculators for SIP, EMI, Retirement & More",
+  description:
+    "Free online financial calculators for SIP, EMI, FD, mutual funds, retirement planning, NPS, and wealth projection. Real formulas, instant results, no login required.",
+  keywords: [
+    "financial calculators",
+    "sip calculator",
+    "emi calculator",
+    "fd calculator",
+    "investment calculator",
+    "retirement calculator",
+    "nps calculator",
+    "mutual fund calculator",
+    "wealth calculator",
+    "compound interest calculator",
+  ],
+  openGraph: {
+    title: "Free Financial Calculators | SIP, EMI, FD, Retirement | PlanMyCorpus",
+    description:
+      "8+ free financial calculators for SIP, EMI, FD, retirement planning, NPS, and more. Real-time results with interactive charts. No signup needed.",
+    type: "website",
+    url: "https://plan-my-corpus.vercel.app",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Financial Calculators | PlanMyCorpus",
+    description: "Calculate SIP returns, EMI, FD maturity, retirement corpus, and more with real formulas and visual charts.",
+  },
+};
 
 const calculators = [
   {

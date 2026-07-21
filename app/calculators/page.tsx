@@ -2,9 +2,31 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Popular Calculators",
+  title: "Financial Calculators | SIP, EMI, FD, Retirement & More",
   description:
-    "Explore PlanMyCorpus calculators for SIP, Step Up SIP, FD, EMI, SWP, STP, Retirement, and NPS with fast results and easy-to-understand charts.",
+    "8 free financial calculators for SIP, mutual funds, EMI, Fixed Deposits, retirement planning, NPS, and more. Real-time projections with detailed formulas. No login required.",
+  keywords: [
+    "sip calculator",
+    "emi calculator",
+    "fd calculator",
+    "retirement calculator",
+    "investment calculator",
+    "nps calculator",
+    "financial calculators",
+    "mutual fund calculator",
+  ],
+  openGraph: {
+    title: "Financial Calculators | SIP, EMI, FD & More | PlanMyCorpus",
+    description:
+      "Free financial calculators for SIP, EMI, FD, retirement, and investment planning. Real formulas, instant results, no signup.",
+    type: "website",
+    url: "https://plan-my-corpus.vercel.app/calculators",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Financial Calculators | SIP, EMI, FD & More",
+    description: "Free calculators for SIP, EMI, FD, retirement, and investment planning.",
+  },
 };
 
 const calculators = [
