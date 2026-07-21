@@ -36,13 +36,17 @@ export type CalculatorResult = {
   highlights?: Array<{ label: string; value: number }>;
 };
 
+export type FormulaBlock =
+  | { type: "text"; content: string }
+  | { type: "formula"; lines: string[] };
+
 export type OtherCalculatorConfig = {
   id: OtherCalculatorId;
   slug: string;
   title: string;
   shortDescription: string;
   intro: string;
-  formulaText: string;
+  formulaBlocks: FormulaBlock[];
   fields: CalculatorField[];
   summaryLabels: {
     seriesA: string;
@@ -400,9 +404,31 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     shortDescription:
       "Use PlanMyCorpus Step Up SIP Calculator to estimate future wealth when your SIP increases every year with compounding.",
     intro:
-      "Plan a growing SIP strategy where your contribution steps up annually while returns compound over time.",
-    formulaText:
-      "The calculation simulates month-by-month contributions and applies annual SIP step-up at year end.",
+      "Most of us get salary hikes every year, so why should your SIP stay fixed? A step-up SIP lets you increase your monthly contribution by a set percentage annually — say 10% — which keeps pace with your growing income and can dramatically boost your final corpus without feeling like a financial stretch.",
+    formulaBlocks: [
+      {
+        type: "text",
+        content:
+          "There is no single closed-form expression for a step-up SIP combined with an optional lump sum, so the calculator simulates every month individually. Here is exactly what happens each period:",
+      },
+      {
+        type: "formula",
+        lines: [
+          "Each month:",
+          "  Corpus = (Corpus + Monthly SIP) × (1 + r)",
+          "",
+          "At the end of every 12 months:",
+          "  SIP = SIP × (1 + Step-up Rate / 100)",
+          "",
+          "where  r = Annual Return Rate / 12 / 100",
+        ],
+      },
+      {
+        type: "text",
+        content:
+          "Any optional lump sum is placed into the corpus at month zero and compounds alongside your SIP from the very first period. The step-up is applied once per year — the first 12 months use your original SIP, and each subsequent year the amount increases by the chosen percentage.",
+      },
+    ],
     fields: [
       {
         key: "monthlyInvestment",
@@ -463,14 +489,44 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "What is step-up SIP?",
+        question: "What exactly is a step-up SIP and how is it different from a regular SIP?",
         answer:
-          "Step-up SIP increases your SIP contribution each year, which can significantly improve long-term corpus.",
+          "In a regular SIP you invest the same fixed amount every month for the entire duration. A step-up SIP keeps the same monthly amount within a year but bumps it up by a chosen percentage — say 10% — at the start of each new year. So if you start with ₹10,000 a month, next year it becomes ₹11,000, the year after ₹12,100, and so on. Over a long horizon that annual increase compounds on top of your market returns and can make a surprisingly large difference to the final corpus.",
       },
       {
-        question: "Should I choose step-up SIP over fixed SIP?",
+        question: "How is the step-up SIP corpus calculated?",
         answer:
-          "If your income is expected to grow, step-up SIP can align better with cash flow and build a larger corpus.",
+          "The calculator simulates every single month. Each month it adds your current SIP to the corpus and then applies one month of growth: new_corpus = (corpus + monthlySIP) × (1 + annualReturn/12/100). At the 12-month mark it increases your monthly SIP by the step-up percentage and repeats for the next year. Any lump sum you enter is placed in the corpus at month zero and compounds throughout.",
+      },
+      {
+        question: "What step-up percentage should I start with?",
+        answer:
+          "A 10% annual step-up is a practical starting point because it roughly tracks average salary growth in India. If you are in a high-growth career phase, try 15%. The key is to choose a number you can actually sustain — an ambitious step-up that you abandon after two years does less good than a modest one you stick with.",
+      },
+      {
+        question: "Does step-up SIP make sense if my salary increase is irregular?",
+        answer:
+          "Absolutely. Even if your hikes aren't perfectly regular, you can use the step-up as a planning assumption. Most people find that they can afford a 10% increase on average even in years when formal salary growth is modest, because expenses don't always scale with income. You can also adjust the step-up mid-plan through your fund house's SIP modification facility.",
+      },
+      {
+        question: "How much more corpus does a step-up SIP build compared to a fixed SIP?",
+        answer:
+          "The difference grows dramatically with time. As a rough example: a ₹10,000 monthly SIP at 12% for 20 years builds around ₹99 lakh. Add a 10% annual step-up to the same setup and the corpus jumps to roughly ₹2 crore — more than double — because each year's higher SIP has multiple years of compounding ahead of it.",
+      },
+      {
+        question: "What is the lump sum field for in the step-up SIP calculator?",
+        answer:
+          "It represents a one-time amount you invest at the very start — perhaps a bonus, an inheritance, or proceeds from selling an asset. This lump sum is added to the corpus at month zero and earns compound returns across the full investment period, working alongside your growing SIP contributions.",
+      },
+      {
+        question: "Is step-up SIP available in all mutual funds?",
+        answer:
+          "Most fund houses and investment platforms support step-up or top-up SIP mandates. You can set a fixed rupee increase or a percentage increase annually. A few older platforms may require you to manually increase the mandate each year. Check with your AMC or broker before setting expectations.",
+      },
+      {
+        question: "Are the returns shown here guaranteed?",
+        answer:
+          "No. The calculator uses an expected annual return that you provide. Actual mutual fund returns are market-linked and fluctuate. This tool gives you a projection based on a steady assumed rate — think of it as a planning compass, not a promise.",
       },
     ],
   },
@@ -481,9 +537,33 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     shortDescription:
       "Use PlanMyCorpus FD Calculator to estimate maturity value for lump sum deposits with optional monthly top-ups.",
     intro:
-      "Use this FD calculator to project how your fixed deposit can grow with compounding and optional monthly top-up.",
-    formulaText:
-      "This simulation applies monthly compounding and adds optional top-ups every month.",
+      "A fixed deposit is one of the simplest ways to earn guaranteed, predictable returns on your savings. Whether you're parking a lump sum for safety or adding small amounts every month on top of an existing deposit, this calculator helps you see the exact maturity value before you lock in your money.",
+    formulaBlocks: [
+      {
+        type: "text",
+        content:
+          "For a plain lump sum FD the maths is straightforward compound interest. When you add a monthly top-up, the calculator blends both in a single month-by-month pass:",
+      },
+      {
+        type: "formula",
+        lines: [
+          "Standard lump sum (no top-up):",
+          "  A = P × (1 + r / 12)^(12 × t)",
+          "",
+          "With monthly top-up (month-by-month simulation):",
+          "  Corpus = (Corpus + Top-up) × (1 + r / 12)",
+          "",
+          "where  P = Principal deposit",
+          "       r = Annual interest rate / 100",
+          "       t = Duration in years",
+        ],
+      },
+      {
+        type: "text",
+        content:
+          "Setting the monthly top-up to zero collapses the formula to pure compound interest on the lump sum. Note that many Indian banks compound FD interest quarterly — this calculator uses monthly compounding, which gives a slightly higher projected maturity value. The difference is typically small (a few basis points) and serves as a reasonable planning approximation.",
+      },
+    ],
     fields: [
       {
         key: "principal",
@@ -535,14 +615,39 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "Is FD return guaranteed?",
+        question: "How does the FD maturity value get calculated?",
         answer:
-          "Bank FD rates are generally fixed for the term selected, but always verify current rates and terms with your bank.",
+          "The calculator uses monthly compounding. Each month your deposit earns interest at 1/12th of the annual rate, and that interest is added to the principal for the next month's calculation. The formula at its core is A = P × (1 + r/12)^(12×t), where P is the principal, r is the annual rate as a decimal, and t is the number of years. When you add a monthly top-up, the calculator runs month by month and adds your top-up before applying monthly growth — effectively treating it as a recurring deposit stacked on top of the lump sum.",
       },
       {
-        question: "Can I include monthly contribution in FD?",
+        question: "Most banks compound FD interest quarterly. Why does this calculator use monthly compounding?",
         answer:
-          "This tool allows optional monthly top-up for planning flexibility similar to recurring additions.",
+          "You're right that many Indian bank FDs compound quarterly, while some compound monthly. This calculator defaults to monthly compounding because it tends to be slightly more optimistic, and it also allows the monthly top-up feature to work cleanly. For quarterly compounding you'd need to use your bank's specific schedule. For most practical planning purposes the difference between quarterly and monthly compounding on an FD is small — typically a few basis points — so the projections here are a good enough approximation.",
+      },
+      {
+        question: "Is the FD interest rate fixed for the entire term?",
+        answer:
+          "Yes, that's the main feature of an FD — the rate you agree to at booking is locked in until maturity, regardless of where interest rates move in the market. This calculator assumes a constant rate throughout the term, which reflects real FD behaviour. If you renew the FD, the new rate at renewal applies.",
+      },
+      {
+        question: "What is the monthly top-up feature?",
+        answer:
+          "It simulates adding a fixed amount to your deposit every month, similar to a recurring deposit (RD) but calculated alongside an initial lump sum. This is useful if you want to model parking a lump sum and then topping it up regularly — though in practice most banks treat these as separate products. You can set this to zero if you only want to calculate a standard FD.",
+      },
+      {
+        question: "How is the interest earned different from returns in a mutual fund?",
+        answer:
+          "FD interest is guaranteed and pre-agreed — you know exactly how much you'll receive regardless of market conditions. Mutual fund returns are market-linked and can be higher or lower than expected. FDs also have TDS implications: interest above ₹40,000 per year per bank (₹50,000 for senior citizens) is subject to 10% TDS if your PAN is on record. Factor that into your actual take-home return.",
+      },
+      {
+        question: "Should I break an existing FD early?",
+        answer:
+          "Premature withdrawal usually attracts a penalty — typically 0.5% to 1% reduction in interest rate. Before breaking an FD, compare the penalty-adjusted return with what you'd earn by keeping it. Use this calculator to model both scenarios: the FD at reduced rate for remaining months versus alternatives.",
+      },
+      {
+        question: "What FD interest rate should I enter?",
+        answer:
+          "Use the current rate your bank offers for your chosen tenure. Rates vary by bank, tenure, and whether you're a regular or senior citizen depositor. As of recent years, most major Indian banks offer between 6.5% and 8.5% on tenures of 1 to 5 years. Check your bank's website for the latest rates before using this calculator.",
       },
     ],
   },
@@ -553,9 +658,31 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     shortDescription:
       "Use PlanMyCorpus EMI Calculator to estimate monthly EMI, principal breakup, total interest, and complete loan payout.",
     intro:
-      "Estimate your loan repayment with a clear breakup of principal and interest across years.",
-    formulaText:
-      "Uses standard EMI formula with monthly reducing balance and amortization simulation.",
+      "Taking a loan is a big commitment, and the numbers can feel opaque when banks quote only the monthly EMI. This calculator breaks it down completely — your exact EMI, how much of each payment goes to principal versus interest, and the total you'll repay over the entire tenure. Knowing these figures before you sign can genuinely change your negotiating position.",
+    formulaBlocks: [
+      {
+        type: "text",
+        content:
+          "Every bank and NBFC in India uses the reducing balance method to compute EMI. The formula is:",
+      },
+      {
+        type: "formula",
+        lines: [
+          "         P × r × (1 + r)ⁿ",
+          "EMI  =  ──────────────────",
+          "           (1 + r)ⁿ − 1",
+          "",
+          "where  P = Loan principal",
+          "       r = Monthly interest rate = Annual Rate / 12 / 100",
+          "       n = Total months = Years × 12",
+        ],
+      },
+      {
+        type: "text",
+        content:
+          "After computing the EMI, the calculator builds a complete amortisation schedule month by month. Each month: interest = outstanding balance × r, principal repaid = EMI − interest, and the balance reduces by the principal portion. In the early months the interest slice dominates; as the balance falls over time, a larger share of each EMI clears principal. This is why prepaying in the first few years of a long loan saves far more interest than prepaying toward the end.",
+      },
+    ],
     fields: [
       {
         key: "loanAmount",
@@ -598,14 +725,39 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "How is EMI calculated?",
+        question: "What is the formula used to calculate EMI?",
         answer:
-          "EMI is calculated using loan amount, monthly interest rate, and total number of months in tenure.",
+          "Banks use the reducing balance method. The formula is: EMI = P × r × (1+r)^n ÷ [(1+r)^n − 1]. Here P is the loan amount (principal), r is the monthly interest rate (annual rate divided by 12 and then by 100), and n is the total number of months. For example, on a ₹30 lakh home loan at 9% annual interest for 20 years: r = 0.09/12 = 0.0075, n = 240, and the EMI works out to roughly ₹26,992. The key point is that interest is charged on the outstanding balance each month, not on the original principal — so as you repay principal, interest charges reduce over time.",
       },
       {
-        question: "How can I reduce total interest?",
+        question: "Why does so much of the early EMI go toward interest?",
         answer:
-          "Lower tenure or lower interest rate can reduce total interest burden substantially.",
+          "In the early months the outstanding balance is high, so the interest portion is large and only a small slice of your EMI clears principal. As months pass, the balance drops, interest charges fall, and more of your fixed EMI goes toward principal. This is called amortisation. It's why prepaying in the first few years of a long loan saves disproportionately more interest than prepaying in the last few years.",
+      },
+      {
+        question: "How can I reduce the total interest I pay on a loan?",
+        answer:
+          "Three main levers: lower the interest rate (by negotiating or refinancing), reduce the tenure, or make occasional prepayments. Even a single extra EMI per year can shave months off the loan. This calculator lets you compare scenarios — try reducing tenure by 2–3 years and see how total interest changes. Often the monthly EMI increase is modest but the lifetime interest saving is substantial.",
+      },
+      {
+        question: "What is the difference between flat rate and reducing balance interest?",
+        answer:
+          "Flat rate interest charges a fixed percentage on the original loan amount every year throughout the tenure. Reducing balance (which banks use for home and car loans) charges interest only on the outstanding principal, so the effective interest burden decreases over time. A flat rate of 7% is not the same as a 7% reducing balance rate — the effective cost on flat rate is roughly 1.8× higher. Always check which method your lender is using.",
+      },
+      {
+        question: "Does the calculator factor in processing fees or GST?",
+        answer:
+          "No — this calculator shows the pure EMI based on principal, rate, and tenure. Real loans carry one-time processing fees (usually 0.5%–2% of loan amount), GST on fees, and sometimes foreclosure charges. Add those separately to get total cost of borrowing.",
+      },
+      {
+        question: "What is a good EMI-to-income ratio?",
+        answer:
+          "Most financial advisors suggest keeping total EMIs (including all running loans) below 40–50% of your monthly take-home pay. If a new loan pushes your total EMI past that threshold, you may want to reduce the loan amount, extend tenure, or wait until an existing loan closes.",
+      },
+      {
+        question: "Can I use this for a car loan or personal loan, not just a home loan?",
+        answer:
+          "Yes, the formula is identical across all retail loan types. Just enter the correct loan amount, your lender's annual interest rate, and the tenure. Car loans in India typically range from 8–12% and span 3–7 years. Personal loans tend to carry higher rates of 11–24%. The EMI formula and the resulting amortisation schedule are the same regardless.",
       },
     ],
   },
@@ -616,9 +768,28 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     shortDescription:
       "Use PlanMyCorpus SWP Calculator to estimate monthly withdrawals, remaining corpus, and withdrawal sustainability.",
     intro:
-      "Plan regular withdrawals from your corpus while tracking remaining balance and sustainability.",
-    formulaText:
-      "The simulation applies monthly growth and then monthly withdrawal from the corpus.",
+      "Once you've built a corpus — whether through years of SIP investing, an inheritance, or a retirement payout — the next challenge is making it last. A Systematic Withdrawal Plan lets you take out a fixed amount every month while the rest stays invested and keeps growing. This calculator helps you figure out whether your withdrawal plan is sustainable or whether you'll outlive your money.",
+    formulaBlocks: [
+      {
+        type: "text",
+        content:
+          "Growth is applied to the full corpus first, then the withdrawal is deducted — because fund houses typically credit returns before processing redemptions:",
+      },
+      {
+        type: "formula",
+        lines: [
+          "Each month:",
+          "  Corpus = Corpus × (1 + r) − Monthly Withdrawal",
+          "",
+          "where  r = Annual Return Rate / 12 / 100",
+        ],
+      },
+      {
+        type: "text",
+        content:
+          "If the corpus drops to zero before the chosen number of years, the simulation stops and the chart shows the exact depletion point. Sustainability depends on whether monthly growth earned exceeds the monthly withdrawal. At 12% annual return, a ₹1 crore corpus earns roughly ₹1 lakh in month one — any withdrawal above that amount starts eating into principal.",
+      },
+    ],
     fields: [
       {
         key: "initialCorpus",
@@ -670,14 +841,39 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "What is SWP?",
+        question: "What is a Systematic Withdrawal Plan and how does it work?",
         answer:
-          "SWP lets you withdraw fixed amounts periodically while the remaining corpus stays invested.",
+          "An SWP is an instruction you give to a mutual fund to automatically redeem a fixed rupee amount from your investment every month (or quarter). The redeemed units are sold at that day's NAV and the proceeds are credited to your bank account. Meanwhile the remaining units stay invested and continue to earn returns. It's essentially the mirror image of a SIP — instead of putting money in regularly, you're taking money out regularly.",
       },
       {
-        question: "Can my corpus run out in SWP?",
+        question: "How does the calculator decide when the corpus runs out?",
         answer:
-          "Yes, if withdrawals are too high versus growth rate, corpus may deplete earlier.",
+          "Each month the calculator applies growth to the existing corpus and then subtracts your withdrawal. If the corpus drops to zero before the end of the selected years, the simulation stops at that point. You'll see the chart flatline — that's the depletion date. To avoid this, either reduce the monthly withdrawal, increase the assumed return, or start with a larger corpus.",
+      },
+      {
+        question: "What is a safe withdrawal rate?",
+        answer:
+          "A widely cited rule of thumb is 4% per year of your corpus, which translates to about 0.33% per month. On a ₹1 crore corpus that's roughly ₹33,000 per month. At 4% many studies suggest the corpus can last 30+ years even with conservative returns. The exact safe rate depends on your assumed portfolio return, your expected lifespan, and whether you want to leave the corpus intact at the end or deplete it entirely.",
+      },
+      {
+        question: "Can my corpus actually grow even while I'm withdrawing?",
+        answer:
+          "Yes, if the monthly return earned on the corpus is higher than the monthly withdrawal, the corpus net of withdrawals still grows. For example, a ₹1 crore corpus earning 12% annual return grows by about ₹1 lakh in the first month. If you withdraw ₹60,000, the corpus is still ₹40,000 larger after the first month. This is why starting with a sufficiently large corpus and keeping withdrawals reasonable lets wealth last indefinitely.",
+      },
+      {
+        question: "How is SWP different from simply keeping money in a savings account?",
+        answer:
+          "A savings account earns a fixed 2.5–4% interest and you can withdraw freely, but the growth is minimal. An SWP in an equity or balanced mutual fund has the potential for much higher growth, which helps the remaining corpus continue to compound. The tradeoff is that fund returns are not guaranteed — a bad market year can reduce your corpus value simultaneously with withdrawals, which can accelerate depletion.",
+      },
+      {
+        question: "Are SWP withdrawals taxable?",
+        answer:
+          "Yes. Each withdrawal redeems mutual fund units, triggering capital gains tax. For equity funds held over 12 months, gains above ₹1 lakh per year are taxed at 10% (long-term capital gains). For debt funds or those held under 12 months, gains are taxed at your income tax slab rate. An SWP can be tax-efficient compared to dividends, since you only pay tax on the gains component of each redemption, not the full withdrawal amount.",
+      },
+      {
+        question: "What return rate should I assume for SWP planning?",
+        answer:
+          "Use conservative assumptions, especially for retirement planning. If your portfolio is equity-heavy, 10–11% is a reasonable long-term average, but in any given year it could be −20% or +40%. For withdrawal planning, many advisors suggest assuming 8–9% to build in a buffer. If you're withdrawing from a debt fund, 6–7% is more realistic.",
       },
     ],
   },
@@ -688,9 +884,32 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     shortDescription:
       "Use PlanMyCorpus STP Calculator to model source-to-target fund transfers and track portfolio growth clearly.",
     intro:
-      "Estimate how a Systematic Transfer Plan moves money from a source corpus to a target growth fund.",
-    formulaText:
-      "Each month source and target funds grow at respective rates, and transfer amount shifts to target.",
+      "If you have a lump sum sitting in a liquid or debt fund but want it in equity over time, an STP is the cleaner alternative to manually transferring money each month. It automates the switch, keeps your parked money earning returns in the source fund while gradually deploying it to the target, and reduces the risk of putting everything in at the wrong moment.",
+    formulaBlocks: [
+      {
+        type: "text",
+        content:
+          "Both funds are simulated in parallel every month so their compounding is tracked independently:",
+      },
+      {
+        type: "formula",
+        lines: [
+          "Each month:",
+          "  Source = Source × (1 + rₛ) − Monthly Transfer",
+          "  Target = Target × (1 + rₜ) + Monthly Transfer",
+          "",
+          "where  rₛ = Source fund annual rate / 12 / 100",
+          "       rₜ = Target fund annual rate / 12 / 100",
+          "",
+          "Net portfolio value = Source + Target",
+        ],
+      },
+      {
+        type: "text",
+        content:
+          "Growth is applied before the transfer each month, so money still sitting in the source fund keeps earning returns right up until it is moved. Transferred money starts compounding in the target fund from the very month it arrives. The simulation stops early if the source fund balance reaches zero before the chosen duration ends.",
+      },
+    ],
     fields: [
       {
         key: "sourceCorpus",
@@ -751,14 +970,39 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "What is STP used for?",
+        question: "What is a Systematic Transfer Plan and why would I use one?",
         answer:
-          "STP is commonly used to move money from debt or liquid funds to equity funds in a phased manner.",
+          "An STP is an automated instruction to move a fixed amount from one mutual fund (the source, typically debt or liquid) to another (the target, typically equity) every month. People use it primarily when they receive a large lump sum — a bonus, maturity payout, or asset sale proceeds — and don't want to invest it all in equity at once due to market timing risk. Instead, they park the full amount in a stable debt fund and let it trickle into equity over 6–24 months.",
       },
       {
-        question: "Is STP better than lump sum?",
+        question: "How is STP calculated in this tool?",
         answer:
-          "STP can reduce timing risk by spreading transfers over time, depending on market conditions.",
+          "The calculator runs both funds simultaneously every month. The source fund earns its return first, then the transfer amount is subtracted. The target fund earns its return first, then the transfer amount is added. So even money still sitting in the source fund keeps compounding at the source rate until it's transferred — it doesn't just sit idle. The net portfolio value at any point is source + target.",
+      },
+      {
+        question: "Is STP better than investing the full lump sum in equity upfront?",
+        answer:
+          "It depends on market timing. If equity markets rise sharply after you start the STP, lump sum investing would have been better. If markets fall after investment, the STP would have protected you since most of your money was in the safer source fund. Research suggests that over long periods lump sum investing outperforms STP because markets trend upward over time — but the STP offers psychological comfort and some downside protection during volatile stretches.",
+      },
+      {
+        question: "What should I put in as the source return rate?",
+        answer:
+          "Liquid funds typically return 6–7% annually, and short-duration debt funds might return 7–8%. Use a conservative estimate — you're choosing this fund for stability, not returns. The source fund's purpose is to preserve capital while it waits to be transferred.",
+      },
+      {
+        question: "What should I use as the target return rate?",
+        answer:
+          "For equity mutual funds a 10–14% annual return is a common planning assumption for long-term projections, though actual returns will vary year to year. For balanced or hybrid funds you might use 9–11%. Remember that higher expected return assumptions make the STP look more attractive — use a figure you can genuinely defend over the investment horizon.",
+      },
+      {
+        question: "What happens when the source fund runs out before the STP duration ends?",
+        answer:
+          "The calculator stops the simulation when the source fund balance hits zero. If you set a monthly transfer that's too high relative to the source corpus size and duration, the source will empty early. For example, a ₹20 lakh source corpus with ₹2 lakh monthly transfers runs out in about 10–11 months. The tool will reflect this and show the chart truncating.",
+      },
+      {
+        question: "Are STP transactions taxable?",
+        answer:
+          "Yes. Each transfer is treated as a redemption from the source fund and a fresh investment in the target fund. For debt funds held over 3 years, gains are taxed as long-term capital gains (20% with indexation). For holdings under 3 years, gains are added to income and taxed at your slab rate. Factor tax impact into your planning, especially for large corpus STPs.",
       },
     ],
   },
@@ -769,9 +1013,32 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     shortDescription:
       "Use PlanMyCorpus Retirement Calculator to estimate future retirement corpus with savings, returns, and inflation assumptions.",
     intro:
-      "Check whether your current savings pace can build enough retirement corpus by target retirement age.",
-    formulaText:
-      "Projects monthly contributions with compounding till retirement age and shows inflation-adjusted corpus estimate.",
+      "Retirement planning gets uncomfortable to think about, but running the numbers is the single most useful thing you can do for your future self. This calculator tells you how large a corpus your current savings pace will build by retirement — and crucially, what that corpus is actually worth in today's money after inflation has chipped away at it for decades.",
+    formulaBlocks: [
+      {
+        type: "text",
+        content:
+          "The corpus builds through monthly compounding, exactly like a SIP. The extra step here is adjusting the final number for inflation so you can see what it is worth in today's rupees:",
+      },
+      {
+        type: "formula",
+        lines: [
+          "Corpus accumulation (each month):",
+          "  Corpus = (Corpus + Monthly Investment) × (1 + r)",
+          "  [runs for (Retirement Age − Current Age) × 12 months]",
+          "",
+          "Inflation-adjusted value at retirement:",
+          "  Real Value = Nominal Corpus ÷ (1 + Inflation Rate / 100)^Years",
+          "",
+          "where  r = Annual Return Rate / 12 / 100",
+        ],
+      },
+      {
+        type: "text",
+        content:
+          "Starting with your current savings as the initial corpus ensures the projection accounts for what you have already accumulated. The inflation-adjusted figure is the one that matters most — ₹5 crore thirty years from now at 6% annual inflation has the same purchasing power as roughly ₹87 lakh today.",
+      },
+    ],
     fields: [
       {
         key: "currentAge",
@@ -841,14 +1108,39 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "How much corpus is enough for retirement?",
+        question: "How does the retirement corpus calculator work?",
         answer:
-          "It depends on lifestyle, inflation, and post-retirement return assumptions. Use this as a scenario tool.",
+          "You enter your current age, target retirement age, existing savings, monthly investment, expected return, and inflation. The calculator compounds your savings month by month at the chosen return rate, adding your monthly contribution each period. At retirement age it shows your nominal corpus (the headline number) and also divides it by cumulative inflation to show what it's worth in today's purchasing power — the inflation-adjusted figure is the one that actually matters for planning.",
       },
       {
-        question: "Why inflation-adjusted corpus is important?",
+        question: "What is the inflation-adjusted corpus and why does it matter?",
         answer:
-          "Inflation reduces future purchasing power, so real-value estimates are essential for planning.",
+          "Suppose you project a retirement corpus of ₹5 crore in 30 years. That sounds large, but at 6% annual inflation, ₹5 crore in 30 years has the same purchasing power as roughly ₹87 lakh today. The inflation-adjusted figure — ₹87 lakh in this example — tells you what your wealth will actually feel like. Retirement planning based on nominal numbers without adjusting for inflation often leads to a nasty surprise.",
+      },
+      {
+        question: "How much corpus do I actually need to retire?",
+        answer:
+          "A common approach is the 25× rule: multiply your expected annual expenses in retirement by 25. This assumes a 4% safe withdrawal rate, meaning you draw 4% of the corpus per year and it theoretically lasts forever if returns stay around 7–8% real. For ₹60,000 monthly expenses, you need ₹1.8 crore in today's money — but scaled for inflation to your retirement date. This calculator helps you see whether your current savings trajectory gets you there.",
+      },
+      {
+        question: "What annual return rate should I assume?",
+        answer:
+          "For a diversified equity portfolio invested over 20–30 years, 10–12% is a reasonable historical Indian market average. If you're in balanced or hybrid funds, 9–10% is more conservative. Don't use 15% or higher unless your investment horizon is short and you're specifically targeting high-risk strategies — over-optimistic return assumptions are how retirement plans fail.",
+      },
+      {
+        question: "What inflation rate should I use?",
+        answer:
+          "India's long-run CPI inflation averages around 5–7%. A 6% default is standard for retirement planning purposes. However, healthcare inflation in India tends to run higher — 10–12% — so if you're also planning for medical expenses in retirement, you may want to model those separately with a higher rate.",
+      },
+      {
+        question: "I'm 45 and haven't started saving for retirement yet — is it too late?",
+        answer:
+          "It's never too late, but the math is less forgiving. With 15–20 years to retirement instead of 30–35, you'll need to invest a much larger monthly amount to build the same corpus. Use this calculator to run your specific numbers. You may also want to extend your working years slightly or adjust your retirement lifestyle expectations. The key is to start now — every year of delay costs more than most people realise.",
+      },
+      {
+        question: "Should I include EPF and PPF in 'current savings'?",
+        answer:
+          "Yes, absolutely. Your EPF corpus, PPF balance, and any other retirement-earmarked savings should go into the 'current savings' field. EPF grows at roughly 8–8.5% per year (compounded annually), which you might want to model separately if your EPF balance is large, since the return rate differs from your equity portfolio.",
       },
     ],
   },
@@ -859,9 +1151,33 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     shortDescription:
       "Use PlanMyCorpus NPS Calculator to estimate maturity corpus, annuity allocation, lump sum withdrawal, and pension.",
     intro:
-      "Project your NPS corpus with monthly contributions and estimate pension using annuity assumptions.",
-    formulaText:
-      "Projects contribution growth till maturity, then splits corpus into annuity and lump sum based on chosen percentage.",
+      "NPS is one of India's most tax-efficient retirement vehicles — you get deductions under both 80C and 80CCD(1B), and the corpus builds up over your working life. The challenge is estimating the final split: how much you'll withdraw tax-free as a lump sum and how much will go into an annuity for monthly pension. This calculator projects both.",
+    formulaBlocks: [
+      {
+        type: "text",
+        content:
+          "Accumulation works like a regular SIP with monthly compounding. The distinctive part is the maturity split between lump sum and annuity:",
+      },
+      {
+        type: "formula",
+        lines: [
+          "Accumulation (each month):",
+          "  Corpus = (Corpus + Monthly Contribution) × (1 + r)",
+          "",
+          "At maturity:",
+          "  Annuity Corpus  = Maturity × (Annuity % / 100)",
+          "  Lump Sum        = Maturity − Annuity Corpus",
+          "  Monthly Pension = Annuity Corpus × (Annuity Rate / 100) ÷ 12",
+          "",
+          "where  r = Annual Return Rate / 12 / 100",
+        ],
+      },
+      {
+        type: "text",
+        content:
+          "The minimum annuity allocation by PFRDA regulation is 40% — at least 40% of the maturity corpus must be used to purchase an annuity. The remaining 60% can be withdrawn as a tax-free lump sum. The estimated monthly pension depends on the annuity corpus size and the rate your annuity service provider offers at retirement, which has generally ranged from 5.5% to 7% in India.",
+      },
+    ],
     fields: [
       {
         key: "currentCorpus",
@@ -931,14 +1247,44 @@ export const OTHER_CALCULATORS: OtherCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "How does NPS payout work?",
+        question: "How does NPS work at maturity?",
         answer:
-          "At maturity, a part can be withdrawn as lump sum and the rest is used to buy annuity for pension.",
+          "When you reach 60, NPS allows you to withdraw up to 60% of the corpus as a tax-free lump sum. The remaining 40% (or more, if you choose) must be used to buy an annuity from an IRDAI-approved annuity service provider. The annuity then pays you a monthly pension for the rest of your life. This calculator helps you estimate both the lump sum and the expected monthly pension based on the annuity corpus and an assumed annuity return rate.",
       },
       {
-        question: "Is monthly pension fixed?",
+        question: "How is the monthly pension estimated?",
         answer:
-          "Pension depends on annuity corpus and annuity rates available at retirement.",
+          "The estimated monthly pension uses the formula: pension = annuityCorpus × (annuityReturnRate / 100) ÷ 12. For example, if your annuity corpus is ₹40 lakh and the annuity rate is 6%, your annual pension is ₹2.4 lakh, or ₹20,000 per month. The actual pension depends on the annuity plan you choose (life annuity, joint life, with return of purchase price, etc.) and the rates prevailing at the time you retire.",
+      },
+      {
+        question: "What annuity return rate should I use?",
+        answer:
+          "NPS annuity rates in India have generally ranged from 5.5% to 7% in recent years. A conservative planning assumption is 6%. This rate varies with interest rate cycles and the annuity provider's offerings. If you're planning decades out, use 5.5–6% to stay conservative, since long-term interest rates can fall.",
+      },
+      {
+        question: "Is the 40% annuity a minimum or can I choose more?",
+        answer:
+          "40% is the regulatory minimum — you must put at least 40% of the corpus into an annuity at maturity. You can voluntarily put more. If you put 100% into the annuity, the full amount generates pension and you get no lump sum. This calculator lets you experiment with any annuity percentage from 40% to 100% to see how that choice affects both the lump sum and monthly pension.",
+      },
+      {
+        question: "What are Tier I and Tier II NPS accounts?",
+        answer:
+          "Tier I is the primary NPS account — it has a lock-in until age 60 (with limited exceptions) but offers the full suite of tax benefits under 80C and 80CCD(1B). Tier II is a voluntary savings account with no lock-in or withdrawal restrictions, but it doesn't carry the same tax deduction benefits. This calculator models Tier I, the standard retirement corpus.",
+      },
+      {
+        question: "What is the 80CCD(1B) benefit in NPS?",
+        answer:
+          "Section 80CCD(1B) allows an additional deduction of up to ₹50,000 per year for NPS contributions, over and above the ₹1.5 lakh limit under 80C. So if you're in the 30% tax bracket and contribute ₹50,000 to NPS under 80CCD(1B), you save ₹15,000 in tax. This additional deduction makes NPS particularly attractive compared to other 80C instruments.",
+      },
+      {
+        question: "Can I change my fund manager or fund allocation inside NPS?",
+        answer:
+          "Yes. NPS allows you to switch between pension fund managers (up to 3 times per year for Tier I) and change your asset class allocation (between equity, corporate bonds, government bonds, and alternative assets). The default active choice allows up to 75% equity for subscribers below 50, tapering to 50% by age 60. You can opt for auto choice if you prefer the allocation to be managed automatically by age.",
+      },
+      {
+        question: "Is the NPS corpus visible in this calculator's chart?",
+        answer:
+          "Yes — the bar chart shows invested amount (total contributions) and gains (market growth on top) year by year up to maturity. The summary cards show the final lump sum withdrawal, annuity corpus, total maturity value, and estimated monthly pension. All values are pre-tax projections.",
       },
     ],
   },

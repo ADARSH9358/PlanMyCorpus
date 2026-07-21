@@ -103,7 +103,22 @@ export default async function CalculatorPage({ params }: PageProps) {
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="text-2xl font-semibold text-slate-900">How it works</h2>
-        <p className="mt-3 text-slate-700">{calculator.formulaText}</p>
+        {calculator.formulaBlocks.map((block, index) =>
+          block.type === "formula" ? (
+            <div
+              key={index}
+              className="mt-4 overflow-x-auto rounded-lg border border-slate-200 bg-slate-50 p-5"
+            >
+              <pre className="font-mono text-sm leading-relaxed text-slate-800">
+                {block.lines.join("\n")}
+              </pre>
+            </div>
+          ) : (
+            <p key={index} className="mt-3 text-slate-700">
+              {block.content}
+            </p>
+          ),
+        )}
       </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6">

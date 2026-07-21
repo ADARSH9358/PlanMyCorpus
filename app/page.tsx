@@ -214,6 +214,60 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ section */}
+      <section className="rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-sm md:p-12">
+        <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
+          Common questions about financial planning
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+          Answers to questions that come up most often when people start working through the numbers.
+        </p>
+        <div className="mt-8 space-y-6 text-slate-700">
+          <article>
+            <h3 className="font-semibold text-slate-900">What is the difference between SIP and lump sum investing?</h3>
+            <p className="mt-2 text-sm leading-7">
+              A SIP invests a fixed amount at regular intervals — weekly, monthly, or yearly — regardless of market levels. A lump sum puts all your money in at once. SIP has the advantage of rupee cost averaging: you buy more units when prices are low and fewer when prices are high, smoothing out the impact of volatility. Lump sum investing tends to outperform SIP over very long periods when markets trend upward, but requires more comfort with timing risk. Many investors combine both: a lump sum to deploy existing savings and a SIP for ongoing income.
+            </p>
+          </article>
+          <article>
+            <h3 className="font-semibold text-slate-900">How does compounding work in practice?</h3>
+            <p className="mt-2 text-sm leading-7">
+              Compounding means earning returns on your returns, not just on your original investment. At 12% annual return, ₹1 lakh grows to ₹1.12 lakh after year one. In year two you earn 12% on ₹1.12 lakh — not on the original ₹1 lakh — so you get ₹13,440 rather than ₹12,000. This gap between what you earn and what you would have earned at simple interest widens every year. Over 30 years at 12%, ₹1 lakh grows to ₹30 lakh. The last decade of that growth contributes more than the first two decades combined.
+            </p>
+          </article>
+          <article>
+            <h3 className="font-semibold text-slate-900">What return rate should I use in these calculators?</h3>
+            <p className="mt-2 text-sm leading-7">
+              It depends on the asset class. For diversified equity mutual funds, 10–12% per year is a reasonable long-term planning assumption based on Indian market history. For fixed deposits, use the current rate your bank offers (typically 6.5–8%). For NPS, 10% is a common middle-ground. The key is to be honest about assumptions — an optimistic 18% return assumption on an equity fund will produce projections that are almost certainly too high.
+            </p>
+          </article>
+          <article>
+            <h3 className="font-semibold text-slate-900">How does inflation affect my financial planning?</h3>
+            <p className="mt-2 text-sm leading-7">
+              Inflation silently erodes purchasing power. At 6% annual inflation, something that costs ₹100 today will cost ₹179 in 10 years and ₹320 in 20 years. This is why our Retirement Calculator shows an inflation-adjusted corpus figure alongside the nominal one — because the nominal number is misleading for long-term planning. A good rule of thumb: subtract the inflation rate from your expected investment return to get your &quot;real return.&quot; At 12% investment return and 6% inflation, your real return is roughly 6%.
+            </p>
+          </article>
+          <article>
+            <h3 className="font-semibold text-slate-900">Is it better to invest in SIP or pay off a loan early?</h3>
+            <p className="mt-2 text-sm leading-7">
+              Compare the effective rates. If your home loan charges 9% and your equity SIP is expected to return 12%, investing in SIP has a 3% advantage. But if you have a personal loan at 18% or a credit card at 36%, paying those off first is almost always smarter because the guaranteed 18–36% saving from eliminating debt is hard to beat with any investment. Use the EMI Calculator to see your total interest burden and the SIP Calculator to compare scenarios side by side.
+            </p>
+          </article>
+          <article>
+            <h3 className="font-semibold text-slate-900">Are these calculators suitable for NRI investors?</h3>
+            <p className="mt-2 text-sm leading-7">
+              Yes. The underlying mathematics is universal — compounding, amortisation, and corpus projection work the same way regardless of residence status. NRIs investing in Indian mutual funds through NRE or NRO accounts, or through NPS, can use all these calculators with India-specific return and inflation assumptions. The only caveat is that tax treatment for NRIs may differ from residents — consult a tax advisor for jurisdiction-specific guidance.
+            </p>
+          </article>
+          <article>
+            <h3 className="font-semibold text-slate-900">Do I need to create an account to use PlanMyCorpus?</h3>
+            <p className="mt-2 text-sm leading-7">
+              No account or sign-up is needed. Every calculator on PlanMyCorpus is completely free and works directly in your browser. There&apos;s no data stored, no tracking of your inputs, and no registration wall. Just open a calculator, adjust the sliders, and read your results instantly.
+            </p>
+          </article>
+        </div>
+      </section>
+
     </main>
   );
 }
